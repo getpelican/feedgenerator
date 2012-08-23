@@ -1,0 +1,20 @@
+Metadata-Version: 1.0
+Name: feedgenerator
+Version: 1.2.1
+Summary: Standalone version of django.utils.feedgenerator
+Home-page: http://hg.lolnet.org/feedgenerator/
+Author: Alexis Metaireau
+Author-email: alexis@notmyidea.org
+License: UNKNOWN
+Description: UNKNOWN
+Keywords: feed,atom,rss
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
