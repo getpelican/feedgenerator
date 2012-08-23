@@ -331,7 +331,7 @@ class RssFeed(SyndicationFeed):
             handler.addQuickElement("category", cat)
         if self.feed['feed_copyright'] is not None:
             handler.addQuickElement("copyright", self.feed['feed_copyright'])
-        handler.addQuickElement("lastBuildDate", rfc2822_date(self.latest_post_date()).decode('utf-8'))
+        handler.addQuickElement("lastBuildDate", rfc2822_date(self.latest_post_date()))
         if self.feed['ttl'] is not None:
             handler.addQuickElement("ttl", self.feed['ttl'])
 
@@ -365,7 +365,7 @@ class Rss201rev2Feed(RssFeed):
             handler.addQuickElement("dc:creator", item["author_name"], {"xmlns:dc": "http://purl.org/dc/elements/1.1/"})
 
         if item['pubdate'] is not None:
-            handler.addQuickElement("pubDate", rfc2822_date(item['pubdate']).decode('utf-8'))
+            handler.addQuickElement("pubDate", rfc2822_date(item['pubdate']))
         if item['comments'] is not None:
             handler.addQuickElement("comments", item['comments'])
         if item['unique_id'] is not None:
