@@ -408,7 +408,7 @@ class Atom1Feed(SyndicationFeed):
         if self.feed['feed_url'] is not None:
             handler.addQuickElement("link", "", {"rel": "self", "href": self.feed['feed_url']})
         handler.addQuickElement("id", self.feed['id'])
-        handler.addQuickElement("updated", rfc3339_date(self.latest_post_date()).decode('utf-8'))
+        handler.addQuickElement("updated", rfc3339_date(self.latest_post_date()))
         if self.feed['author_name'] is not None:
             handler.startElement("author", {})
             handler.addQuickElement("name", self.feed['author_name'])
@@ -434,7 +434,7 @@ class Atom1Feed(SyndicationFeed):
         handler.addQuickElement("title", item['title'])
         handler.addQuickElement("link", "", {"href": item['link'], "rel": "alternate"})
         if item['pubdate'] is not None:
-            handler.addQuickElement("updated", rfc3339_date(item['pubdate']).decode('utf-8'))
+            handler.addQuickElement("updated", rfc3339_date(item['pubdate']))
 
         # Author information.
         if item['author_name'] is not None:
