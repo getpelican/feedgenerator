@@ -3,186 +3,96 @@ Syndication feed generation library -- used for generating RSS, etc.
 
 Sample usage:
 
->>> import feedgenerator
+>>> from django.utils import feedgenerator
 >>> feed = feedgenerator.Rss201rev2Feed(
-...     title=u"Poynter E-Media Tidbits",
-...     link=u"http://www.poynter.org/column.asp?id=31",
-...     feed_url=u"http://test.org/rss",
-...     description=u"A group weblog by the sharpest minds in online media/journalism/publishing.",
-...     language=u"en",
+...     title="Poynter E-Media Tidbits",
+...     link="http://www.poynter.org/column.asp?id=31",
+...     description="A group Weblog by the sharpest minds in online media/journalism/publishing.",
+...     language="en",
 ... )
 >>> feed.add_item(
 ...     title="Hello",
-...     link=u"http://www.holovaty.com/test/",
+...     link="http://www.holovaty.com/test/",
 ...     description="Testing."
 ... )
->>> fp = open('test.rss', 'w')
->>> feed.write(fp, 'utf-8')
->>> fp.close()
+>>> with open('test.rss', 'w') as fp:
+...     feed.write(fp, 'utf-8')
 
 For definitions of the different versions of RSS, see:
-http://diveintomark.org/archives/2004/02/04/incompatible-rss
+http://web.archive.org/web/20110718035220/http://diveintomark.org/archives/2004/02/04/incompatible-rss
 """
+from __future__ import unicode_literals
 
 import datetime
-import urllib.parse
-import urllib.request, urllib.parse, urllib.error
-import types
-from decimal import Decimal
-from xml.sax.saxutils import XMLGenerator
-
-# -- Imported from others modules ----------------------------------
-
-class SimplerXMLGenerator(XMLGenerator):
-    def addQuickElement(self, name, contents=None, attrs=None):
-        "Convenience method for adding an element with no children"
-        if attrs is None: attrs = {}
-        self.startElement(name, attrs)
-        if contents is not None:
-            self.characters(contents)
-        self.endElement(name)
-
-def smart_str(s, encoding='utf-8', strings_only=False, errors='strict'):
-    """
-    Returns a bytestring version of 's', encoded as specified in 'encoding'.
-
-    If strings_only is True, don't convert (some) non-string-like objects.
-    """
-    if strings_only and isinstance(s, (type(None), int)):
-        return s
-    elif not isinstance(s, str):
-        try:
-            return str(s)
-        except UnicodeEncodeError:
-            if isinstance(s, Exception):
-                # An Exception subclass containing non-ASCII data that doesn't
-                # know how to print itself properly. We shouldn't raise a
-                # further exception.
-                return ' '.join([smart_str(arg, encoding, strings_only,
-                        errors) for arg in s])
-            return str(s).encode(encoding, errors)
-    elif isinstance(s, str):
-        return s.encode(encoding, errors)
-    elif s and encoding != 'utf-8':
-        return s.decode('utf-8', errors).encode(encoding, errors)
-    else:
-        return s
-
-def  iri_to_uri(iri):                                                           
-    if iri is None:                                                            
-        return iri                                                             
-    return urllib.parse.quote(smart_str(iri), safe="/#%[]=:;$&()+,!?*@'~")   
-
-def is_protected_type(obj):
-    """Determine if the object instance is of a protected type.
-
-    Objects of protected types are preserved as-is when passed to
-    force_unicode(strings_only=True).
-    """
-    return isinstance(obj, (
-        type(None),
-        int,
-        datetime.datetime, datetime.date, datetime.time,
-        float, Decimal)
-    )
-
-def force_unicode(s, encoding='utf-8', strings_only=False, errors='strict'):
-    """
-    Similar to smart_unicode, except that lazy instances are resolved to
-    strings, rather than kept as lazy objects.
-
-    If strings_only is True, don't convert (some) non-string-like objects.
-    """
-    if strings_only and is_protected_type(s):
-        return s
-    try:
-        if not isinstance(s, str,):
-            if hasattr(s, '__unicode__'):
-                s = str(s)
-            else:
-                try:
-                    s = str(str(s), encoding, errors)
-                except UnicodeEncodeError:
-                    if not isinstance(s, Exception):
-                        raise
-                    # If we get to here, the caller has passed in an Exception
-                    # subclass populated with non-ASCII data without special
-                    # handling to display as a string. We need to handle this
-                    # without raising a further exception. We do an
-                    # approximation to what the Exception's standard str()
-                    # output should be.
-                    s = ' '.join([force_unicode(arg, encoding, strings_only,
-                            errors) for arg in s])
-        elif not isinstance(s, str):
-            # Note: We use .decode() here, instead of unicode(s, encoding,
-            # errors), so that if s is a SafeString, it ends up being a
-            # SafeUnicode at the end.
-            s = s.decode(encoding, errors)
-    except UnicodeDecodeError as e:
-        if not isinstance(s, Exception):
-            raise UnicodeDecodeError(s, *e.args)
-        else:
-            # If we get to here, the caller has passed in an Exception
-            # subclass populated with non-ASCII bytestring data without a
-            # working unicode method. Try to handle this without raising a
-            # further exception by individually forcing the exception args
-            # to unicode.
-            s = ' '.join([force_unicode(arg, encoding, strings_only,
-                    errors) for arg in s])
-    return s
-
-# -- Start of the feedgenerator module --------------------------------------
+try:
+    from urllib.parse import urlparse
+except ImportError:     # Python 2
+    from urlparse import urlparse
+from .xmlutils import SimplerXMLGenerator
+from .encoding import force_text, iri_to_uri
+from . import datetime_safe
+from . import six
+from .six import StringIO
+from .timezone import is_aware
 
 def rfc2822_date(date):
+    # We can't use strftime() because it produces locale-dependant results, so
+    # we have to map english month and day names manually
+    months = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',)
+    days = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
+    # Support datetime objects older than 1900
+    date = datetime_safe.new_datetime(date)
     # We do this ourselves to be timezone aware, email.Utils is not tz aware.
-    if date.tzinfo:
-        time_str = date.strftime('%a, %d %b %Y %H:%M:%S ')
+    dow = days[date.weekday()]
+    month = months[date.month - 1]
+    time_str = date.strftime('%s, %%d %s %%Y %%H:%%M:%%S ' % (dow, month))
+    if not six.PY3:             # strftime returns a byte string in Python 2
+        time_str = time_str.decode('utf-8')
+    if is_aware(date):
         offset = date.tzinfo.utcoffset(date)
-        timezone = (offset.days * 24 * 60) + (offset.seconds / 60)
+        timezone = (offset.days * 24 * 60) + (offset.seconds // 60)
         hour, minute = divmod(timezone, 60)
-        return time_str + "%+03d%02d" % (hour, minute)
+        return time_str + '%+03d%02d' % (hour, minute)
     else:
-        return date.strftime('%a, %d %b %Y %H:%M:%S -0000')
+        return time_str + '-0000'
 
 def rfc3339_date(date):
-    if date.tzinfo:
-        time_str = date.strftime('%Y-%m-%dT%H:%M:%S')
+    # Support datetime objects older than 1900
+    date = datetime_safe.new_datetime(date)
+    time_str = date.strftime('%Y-%m-%dT%H:%M:%S')
+    if not six.PY3:             # strftime returns a byte string in Python 2
+        time_str = time_str.decode('utf-8')
+    if is_aware(date):
         offset = date.tzinfo.utcoffset(date)
-        timezone = (offset.days * 24 * 60) + (offset.seconds / 60)
+        timezone = (offset.days * 24 * 60) + (offset.seconds // 60)
         hour, minute = divmod(timezone, 60)
-        return time_str + "%+03d:%02d" % (hour, minute)
+        return time_str + '%+03d:%02d' % (hour, minute)
     else:
-        return date.strftime('%Y-%m-%dT%H:%M:%SZ')
+        return time_str + 'Z'
 
 def get_tag_uri(url, date):
     """
     Creates a TagURI.
 
-    See http://diveintomark.org/archives/2004/05/28/howto-atom-id
+    See http://web.archive.org/web/20110514113830/http://diveintomark.org/archives/2004/05/28/howto-atom-id
     """
-    url_split = urllib.parse.urlparse(url)
-
-    # Python 2.4 didn't have named attributes on split results or the hostname.
-    hostname = getattr(url_split, 'hostname', url_split[1].split(':')[0])
-    path = url_split[2]
-    fragment = url_split[5]
-
+    bits = urlparse(url)
     d = ''
     if date is not None:
-        d = ',%s' % date.strftime('%Y-%m-%d')
-    return 'tag:%s%s:%s/%s' % (hostname, d, path, fragment)
+        d = ',%s' % datetime_safe.new_datetime(date).strftime('%Y-%m-%d')
+    return 'tag:%s%s:%s/%s' % (bits.hostname, d, bits.path, bits.fragment)
 
 class SyndicationFeed(object):
     "Base class for all syndication feeds. Subclasses should provide write()"
     def __init__(self, title, link, description, language=None, author_email=None,
             author_name=None, author_link=None, subtitle=None, categories=None,
             feed_url=None, feed_copyright=None, feed_guid=None, ttl=None, **kwargs):
-        to_unicode = lambda s: force_unicode(s, strings_only=True)
+        to_unicode = lambda s: force_text(s, strings_only=True)
         if categories:
-            categories = [force_unicode(c) for c in categories]
+            categories = [force_text(c) for c in categories]
         if ttl is not None:
             # Force ints to unicode
-            ttl = force_unicode(ttl)
+            ttl = force_text(ttl)
         self.feed = {
             'title': to_unicode(title),
             'link': iri_to_uri(link),
@@ -210,12 +120,12 @@ class SyndicationFeed(object):
         objects except pubdate, which is a datetime.datetime object, and
         enclosure, which is an instance of the Enclosure class.
         """
-        to_unicode = lambda s: force_unicode(s, strings_only=True)
+        to_unicode = lambda s: force_text(s, strings_only=True)
         if categories:
             categories = [to_unicode(c) for c in categories]
         if ttl is not None:
             # Force ints to unicode
-            ttl = force_unicode(ttl)
+            ttl = force_text(ttl)
         item = {
             'title': to_unicode(title),
             'link': iri_to_uri(link),
@@ -274,7 +184,6 @@ class SyndicationFeed(object):
         """
         Returns the feed in the given encoding as a string.
         """
-        from io import StringIO
         s = StringIO()
         self.write(s, encoding)
         return s.getvalue()
@@ -299,7 +208,7 @@ class Enclosure(object):
         self.url = iri_to_uri(url)
 
 class RssFeed(SyndicationFeed):
-    mime_type = 'application/rss+xml'
+    mime_type = 'application/rss+xml; charset=utf-8'
     def write(self, outfile, encoding):
         handler = SimplerXMLGenerator(outfile, encoding)
         handler.startDocument()
@@ -324,7 +233,9 @@ class RssFeed(SyndicationFeed):
         handler.addQuickElement("title", self.feed['title'])
         handler.addQuickElement("link", self.feed['link'])
         handler.addQuickElement("description", self.feed['description'])
-        handler.addQuickElement("atom:link", None, {"rel": "self", "href": self.feed['feed_url']})
+        if self.feed['feed_url'] is not None:
+            handler.addQuickElement("atom:link", None,
+                    {"rel": "self", "href": self.feed['feed_url']})
         if self.feed['language'] is not None:
             handler.addQuickElement("language", self.feed['language'])
         for cat in self.feed['categories']:
@@ -385,7 +296,7 @@ class Rss201rev2Feed(RssFeed):
 
 class Atom1Feed(SyndicationFeed):
     # Spec: http://atompub.org/2005/07/11/draft-ietf-atompub-format-10.html
-    mime_type = 'application/atom+xml'
+    mime_type = 'application/atom+xml; charset=utf-8'
     ns = "http://www.w3.org/2005/Atom"
 
     def write(self, outfile, encoding):
