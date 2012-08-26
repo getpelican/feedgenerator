@@ -11,3 +11,4 @@ of unicode strings has to be refactored.
 Django has evolved since, so I decided to create a new standalone version
 which is based upon modern code.
 
+See http://parenchym.com/pymblog/ for details.

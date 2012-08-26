@@ -4,7 +4,7 @@
 from setuptools import setup
 
 
-NAME = 'feedgenerator-py3k'
+NAME = 'feedgenerator'
 PACKAGES = ['feedgenerator', 'feedgenerator.django',
     'feedgenerator.django.utils']
 DESCRIPTION = 'Standalone version of django.utils.feedgenerator, compatible with Py3k'
