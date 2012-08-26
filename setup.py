@@ -5,7 +5,8 @@ from setuptools import setup
 
 
 NAME = 'feedgenerator-py3k'
-PACKAGES = ['feedgenerator']
+PACKAGES = ['feedgenerator', 'feedgenerator.django',
+    'feedgenerator.django.utils']
 DESCRIPTION = 'Standalone version of django.utils.feedgenerator, compatible with Py3k'
 LONG_DESCRIPTION = open('README.rst').read(),
 
@@ -27,7 +28,7 @@ CLASSIFIERS = ['Development Status :: 3 - Alpha',
 AUTHOR = 'Django Software Foundation'
 AUTHOR_EMAIL = 'foundation@djangoproject.com'
 MAINTAINER = 'Dirk Makowski'
-MAINTAINER_EMAIL= 'dm@parenchym.com'
+MAINTAINER_EMAIL = 'dm@parenchym.com'
 KEYWORDS = "feed atom rss".split(' ')
 VERSION = '1.5.dev'
 
@@ -39,7 +40,8 @@ setup(
     name=NAME,
     version=VERSION,
     packages=PACKAGES,
-    
+    test_suite=TEST_SUITE,
+    install_requires=REQUIRES,
     # metadata for upload to PyPI
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
@@ -50,7 +52,4 @@ setup(
     keywords=KEYWORDS,
     url=URL,
     classifiers=CLASSIFIERS,
-    test_suite=TEST_SUITE,
-    install_requires=REQUIRES,
-    
 )
