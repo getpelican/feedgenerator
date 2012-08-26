@@ -1,5 +1,12 @@
 # -*- encoding: utf-8 -*-
+
+from __future__ import unicode_literals
+
+import os
+import tempfile
+import six
 import feedgenerator
+
 feed = feedgenerator.Rss201rev2Feed(
     title="Poynter E-Media Tidbits",
     link="http://www.poynter.org/column.asp?id=31",
@@ -15,6 +22,17 @@ feed.add_item(
     link="http://www.holovaty.com/test/",
     description="Testing."
 )
-with open('test.rss', 'w') as fp:
-    feed.write(fp, 'utf-8')
 
+if six.PY3:
+    FN_PREFIX = 'feed_py3-'
+else:
+    FN_PREFIX = 'feed_py2-'
+
+# Usage example in feedgenerator docs opens the file in text mode, not binary.
+# So we do this here likewise.
+fd, filename = tempfile.mkstemp(prefix=FN_PREFIX, suffix='.txt', text=True)
+try:
+    fh = os.fdopen(fd, 'w')
+    feed.write(fh, 'utf-8')
+finally:
+    fh.close()
