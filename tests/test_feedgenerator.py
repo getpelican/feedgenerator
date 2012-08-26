@@ -71,7 +71,6 @@ class TestFeedGenerator(unittest.TestCase):
             # On Python 2, result of feedgenerator is a str string!
             # Expected_result must therefore encoded likewise.
             expected_result = build_expected_result(feed, EXPECTED_RESULT, ENCODING)
-        # XXX Is the following resoning true? XXX
         # The different result types of Python 2 (str=bytes) and Python 3
         # (str=text=unicode) stems from a different implementation of StringIO.
         # As I understand it, getvalue() in Python 2 returns the type you
