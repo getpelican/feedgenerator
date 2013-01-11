@@ -30,7 +30,7 @@ AUTHOR_EMAIL = 'foundation@djangoproject.com'
 MAINTAINER = 'Dirk Makowski'
 MAINTAINER_EMAIL = 'dm@parenchym.com'
 KEYWORDS = "feed atom rss".split(' ')
-VERSION = '1.5.dev'
+VERSION = '1.5'
 
 TEST_SUITE = 'tests'
 
