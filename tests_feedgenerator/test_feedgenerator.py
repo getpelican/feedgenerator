@@ -51,6 +51,9 @@ def build_expected_result(feed, expected_result, encoding):
 
 class TestFeedGenerator(unittest.TestCase):
 
+    def setUp(self):
+        self.maxDiff = None
+
     def test_000_types(self):
         ty = str if six.PY3 else unicode
         for k, v in FIXT_FEED.items():
@@ -60,6 +63,7 @@ class TestFeedGenerator(unittest.TestCase):
         self.assertEqual(type(EXPECTED_RESULT), ty)
 
     def test_001_string_results(self):
+        #import ipdb; ipdb.set_trace()
         feed = feedgenerator.Rss201rev2Feed(**FIXT_FEED)
         feed.add_item(**FIXT_ITEM)
         result = feed.writeString(ENCODING)

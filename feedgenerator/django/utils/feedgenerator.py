@@ -24,6 +24,7 @@ http://web.archive.org/web/20110718035220/http://diveintomark.org/archives/2004/
 from __future__ import unicode_literals
 
 import datetime
+import collections
 try:
     from urllib.parse import urlparse
 except ImportError:     # Python 2
@@ -220,8 +221,10 @@ class RssFeed(SyndicationFeed):
         handler.endElement("rss")
 
     def rss_attributes(self):
-        return {"version": self._version,
-                "xmlns:atom": "http://www.w3.org/2005/Atom"}
+        d = collections.OrderedDict()
+        d["xmlns:atom"] = "http://www.w3.org/2005/Atom"
+        d["version"] = self._version
+        return d
 
     def write_items(self, handler):
         for item in self.items:
