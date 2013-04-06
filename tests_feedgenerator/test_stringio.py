@@ -15,7 +15,7 @@ ENCODING = 'utf-8'
 S0 = 'hello world, Umlauts: äöüßÄÖÜ, Chinese: 四是四，十是十，十四是十四，四十是四十，四十四隻不識字之石獅子是死的'
 S0_BYTES = 'fe fi foe fam'.encode(ENCODING)
 
-print("###", StringIO, "###")
+#print("###", StringIO, "###")
 
 class TestStringIO(unittest.TestCase):
 
