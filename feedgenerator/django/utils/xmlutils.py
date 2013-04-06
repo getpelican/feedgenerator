@@ -2,7 +2,7 @@
 Utilities for XML generation/parsing.
 """
 
-from xml.sax.saxutils import XMLGenerator
+from xml.sax.saxutils import XMLGenerator, quoteattr
 
 class SimplerXMLGenerator(XMLGenerator):
     def addQuickElement(self, name, contents=None, attrs=None):
@@ -12,3 +12,10 @@ class SimplerXMLGenerator(XMLGenerator):
         if contents is not None:
             self.characters(contents)
         self.endElement(name)
+
+    def startElement(self, name, attrs):
+        self._write('<' + name)
+        # sort attributes for consistent output
+        for (name, value) in sorted(attrs.items()):
+            self._write(' %s=%s' % (name, quoteattr(value)))
+        self._write('>')
