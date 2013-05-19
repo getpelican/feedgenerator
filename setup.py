@@ -32,7 +32,7 @@ MAINTAINER_EMAIL = 'dm@parenchym.com'
 KEYWORDS = "feed atom rss".split(' ')
 VERSION = '1.5.dev'
 
-TEST_SUITE = 'tests'
+TEST_SUITE = 'tests_feedgenerator'
 
 REQUIRES = ['pytz', 'six']
 
@@ -52,4 +52,5 @@ setup(
     keywords=KEYWORDS,
     url=URL,
     classifiers=CLASSIFIERS,
+    zip_safe=False,
 )
