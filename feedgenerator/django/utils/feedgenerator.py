@@ -220,8 +220,8 @@ class RssFeed(SyndicationFeed):
         handler.endElement("rss")
 
     def rss_attributes(self):
-        return {"version": self._version,
-                "xmlns:atom": "http://www.w3.org/2005/Atom"}
+        return {'xmlns:atom': 'http://www.w3.org/2005/Atom',
+                'version': self._version}
 
     def write_items(self, handler):
         for item in self.items:
