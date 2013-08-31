@@ -31,7 +31,7 @@ AUTHOR_EMAIL = 'foundation@djangoproject.com'
 MAINTAINER = 'Dirk Makowski'
 MAINTAINER_EMAIL = 'dm@parenchym.com'
 KEYWORDS = "feed atom rss".split(' ')
-VERSION = '1.6'
+VERSION = '1.7'
 
 TEST_SUITE = 'tests_feedgenerator'
 
