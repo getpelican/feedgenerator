@@ -35,7 +35,7 @@ VERSION = '1.6'
 
 TEST_SUITE = 'tests_feedgenerator'
 
-REQUIRES = ['pytz', 'six']
+REQUIRES = ['pytz >= 0a', 'six']
 
 setup(
     name=NAME,
