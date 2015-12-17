@@ -79,7 +79,7 @@ class SyndicationFeed:
     "Base class for all syndication feeds. Subclasses should provide write()"
     def __init__(self, title, link, description, language=None, author_email=None,
             author_name=None, author_link=None, subtitle=None, categories=None,
-            feed_url=None, feed_copyright=None, feed_guid=None, ttl=None, **kwargs):
+            feed_url=None, feed_copyright=None, image=None, feed_guid=None, ttl=None, **kwargs):
         to_unicode = lambda s: force_text(s, strings_only=True)
         if categories:
             categories = [force_text(c) for c in categories]
@@ -98,6 +98,7 @@ class SyndicationFeed:
             'categories': categories or (),
             'feed_url': iri_to_uri(feed_url),
             'feed_copyright': to_unicode(feed_copyright),
+            'image': iri_to_uri(image),
             'id': feed_guid or link,
             'ttl': ttl,
         }
@@ -228,6 +229,12 @@ class RssFeed(SyndicationFeed):
         # Required Elements as per the specification
         handler.addQuickElement("title", self.feed['title'])
         handler.addQuickElement("link", self.feed['link'])
+        if self.feed['image'] is not None:
+            handler.startElement('image', {})
+            handler.addQuickElement("url", self.feed['link']+self.feed['image'])
+            handler.addQuickElement("title", self.feed['title'])
+            handler.addQuickElement("link", self.feed['link'])
+            handler.endElement('image')
         handler.addQuickElement("description", self.feed['description'])
 
         # Optional Channel Elements
