@@ -345,7 +345,7 @@ class Atom1Feed(SyndicationFeed):
         handler.addQuickElement("title", item['title'])
         handler.addQuickElement("link", "", {"href": item['link'], "rel": "alternate"})
         if item['pubdate'] is not None:
-            handler.addQuickElement("updated", rfc3339_date(item['pubdate']))
+            handler.addQuickElement("published", rfc3339_date(item['pubdate']))
 
         # Author information.
         if item['author_name'] is not None:
