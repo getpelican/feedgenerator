@@ -114,7 +114,7 @@ class SyndicationFeed(object):
     def add_item(self, title, link, description, author_email=None,
         author_name=None, author_link=None, pubdate=None, comments=None,
         unique_id=None, enclosure=None, categories=(), item_copyright=None,
-        ttl=None, **kwargs):
+        ttl=None, content=None, **kwargs):
         """
         Adds an item to the feed. All args are expected to be Python Unicode
         objects except pubdate, which is a datetime.datetime object, and
@@ -130,6 +130,7 @@ class SyndicationFeed(object):
             'title': to_unicode(title),
             'link': iri_to_uri(link),
             'description': to_unicode(description),
+            'content': to_unicode(content),
             'author_email': to_unicode(author_email),
             'author_name': to_unicode(author_name),
             'author_link': iri_to_uri(author_link),
@@ -366,6 +367,10 @@ class Atom1Feed(SyndicationFeed):
         # Summary.
         if item['description'] is not None:
             handler.addQuickElement("summary", item['description'], {"type": "html"})
+
+        # Full content.
+        if item['content'] is not None:
+            handler.addQuickElement("content", item['content'], {"type": "html"})
 
         # Enclosure.
         if item['enclosure'] is not None:
