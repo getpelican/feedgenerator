@@ -10,7 +10,7 @@ PACKAGES = ['feedgenerator', 'feedgenerator.django',
 DESCRIPTION = 'Standalone version of django.utils.feedgenerator, compatible with Py3k'
 LONG_DESCRIPTION = open('README.rst').read()
 
-URL = "https://github.com/dmdm/feedgenerator-py3k.git"
+URL = "https://github.com/getpelican/feedgenerator"
 
 CLASSIFIERS = ['Development Status :: 3 - Alpha',
                'Environment :: Web Environment',
