@@ -80,7 +80,10 @@ def get_tag_uri(url, date):
     d = ''
     if date is not None:
         d = ',%s' % datetime_safe.new_datetime(date).strftime('%Y-%m-%d')
-    return 'tag:%s%s:%s/%s' % (bits.hostname, d, bits.path, bits.fragment)
+    fragment = ''
+    if bits.fragment != '':
+        fragment = '/%s' % (bits.fragment)
+    return 'tag:%s%s:%s%s' % (bits.hostname, d, bits.path, fragment)
 
 class SyndicationFeed(object):
     "Base class for all syndication feeds. Subclasses should provide write()"
