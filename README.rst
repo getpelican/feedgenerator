@@ -1,14 +1,9 @@
-feedgenerator-py3k
-==================
+FeedGenerator
+=============
 
-Feedgenerator-py3k is a standalone version of Django's feedgenerator.
-It is based on the current Django Version 1.5.dev20120824122350.
+FeedGenerator is a standalone version of Django's feedgenerator_ module.
+It has evolved over time, including an `update for Py3K`_ and numerous other
+enhancements.
 
-The previous feedgenerator 1.2.1 is based on rather old code, and
-during the port to Python 3 it became obvious that (at least) the handling
-of unicode strings has to be refactored.
-
-Django has evolved since, so I decided to create a new standalone version
-which is based upon modern code.
-
-See http://parenchym.com/pymblog/ for details.
+.. _feedgenerator: https://github.com/django/django/blob/master/django/utils/feedgenerator.py
+.. _update for Py3K: http://parenchym.com/pymblog/porting-feedgenerator-to-py3k.html
