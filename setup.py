@@ -7,7 +7,7 @@ from setuptools import setup
 NAME = 'feedgenerator'
 PACKAGES = ['feedgenerator', 'feedgenerator.django',
     'feedgenerator.django.utils']
-DESCRIPTION = 'Standalone version of django.utils.feedgenerator, compatible with Py3k'
+DESCRIPTION = 'Standalone version of django.utils.feedgenerator'
 LONG_DESCRIPTION = open('README.rst').read()
 
 URL = "https://github.com/getpelican/feedgenerator"
@@ -21,6 +21,8 @@ CLASSIFIERS = ['Development Status :: 3 - Alpha',
                'Programming Language :: Python :: 2.7',
                'Programming Language :: Python :: 3.2',
                'Programming Language :: Python :: 3.3',
+               'Programming Language :: Python :: 3.4',
+               'Programming Language :: Python :: 3.5',
                'Topic :: Internet :: WWW/HTTP',
                'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
                'Topic :: Software Development :: Libraries :: Python Modules',
