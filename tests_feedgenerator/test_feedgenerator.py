@@ -37,7 +37,7 @@ EXPECTED_RESULT_RSS = """<?xml version="1.0" encoding="utf-8"?>
     </description><language>en</language><lastBuildDate>%DATE%</lastBuildDate><item><title>Hello</title><link>http://www.holovaty.com/test/</link><description>Testing.</description></item></channel></rss>"""
 
 EXPECTED_RESULT_ATOM = """<?xml version="1.0" encoding="utf-8"?>
-<feed xml:lang="en" xmlns="http://www.w3.org/2005/Atom"><title>Poynter E-Media Tidbits</title><link href="http://www.poynter.org/column.asp?id=31" rel="alternate"></link><id>http://www.poynter.org/column.asp?id=31</id><updated>%DATE%</updated><entry><title>Hello</title><link href="http://www.holovaty.com/test/" rel="alternate"></link><id>tag:www.holovaty.com:/test//</id><summary type="html">Testing.</summary><content type="html">Full content of our testing entry.</content></entry></feed>"""
+<feed xml:lang="en" xmlns="http://www.w3.org/2005/Atom"><title>Poynter E-Media Tidbits</title><link href="http://www.poynter.org/column.asp?id=31" rel="alternate"></link><id>http://www.poynter.org/column.asp?id=31</id><updated>%DATE%</updated><entry><title>Hello</title><link href="http://www.holovaty.com/test/" rel="alternate"></link><id>tag:www.holovaty.com:/test/</id><summary type="html">Testing.</summary><content type="html">Full content of our testing entry.</content></entry></feed>"""
 
 ENCODING = 'utf-8'
 

@@ -36,7 +36,7 @@ from .six import StringIO
 from .timezone import is_aware
 
 def rfc2822_date(date):
-    # We can't use strftime() because it produces locale-dependant results, so
+    # We can't use strftime() because it produces locale-dependent results, so
     # we have to map english month and day names manually
     months = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',)
     days = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
@@ -80,7 +80,10 @@ def get_tag_uri(url, date):
     d = ''
     if date is not None:
         d = ',%s' % datetime_safe.new_datetime(date).strftime('%Y-%m-%d')
-    return 'tag:%s%s:%s/%s' % (bits.hostname, d, bits.path, bits.fragment)
+    fragment = ''
+    if bits.fragment != '':
+        fragment = '/%s' % (bits.fragment)
+    return 'tag:%s%s:%s%s' % (bits.hostname, d, bits.path, fragment)
 
 class SyndicationFeed(object):
     "Base class for all syndication feeds. Subclasses should provide write()"
