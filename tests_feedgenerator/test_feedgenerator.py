@@ -102,15 +102,7 @@ class TestFeedGenerator(unittest.TestCase):
         self.assertEqual(type(result), type(expected_result))
         self.assertEqual(result, expected_result)
 
-    def OFF_test_002_file_results(self):
-        pass
-        # DO-IT_YOURSELF: Run usage_example with python2 and python3.
-        #                 Each will create a feed file.
-        #                 Compare the files, they must be equal!
-        #                 XXX  Argh -- No, the lastBuildDate will differ.
-        #                              But this is allowed.
-
-    def test_003_string_results_atom(self):
+    def test_002_string_results_atom(self):
         #import ipdb; ipdb.set_trace()
         feed = feedgenerator.Atom1Feed(**FIXT_FEED)
         feed.add_item(**FIXT_ITEM)
