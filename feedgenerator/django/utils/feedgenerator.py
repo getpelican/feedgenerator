@@ -349,10 +349,14 @@ class Atom1Feed(SyndicationFeed):
     def add_item_elements(self, handler, item):
         handler.addQuickElement("title", item['title'])
         handler.addQuickElement("link", "", {"href": item['link'], "rel": "alternate"})
+
+        updateddate = datetime.datetime.now()
         if item['pubdate'] is not None:
             handler.addQuickElement("published", rfc3339_date(item['pubdate']))
+            updateddate = item['pubdate']
         if item['updateddate'] is not None:
-            handler.addQuickElement("updated", rfc3339_date(item['updateddate']))
+            updateddate = item['updateddate']
+        handler.addQuickElement("updated", rfc3339_date(updateddate))
 
         # Author information.
         if item['author_name'] is not None:

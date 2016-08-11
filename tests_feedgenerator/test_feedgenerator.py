@@ -8,6 +8,7 @@ except ImportError:
     import unittest
 
 import six
+import datetime
 
 import feedgenerator
 
@@ -26,6 +27,7 @@ FIXT_ITEM = dict(
     link="http://www.holovaty.com/test/",
     description="Testing.",
     content="Full content of our testing entry.",
+    pubdate=datetime.datetime(2016,8,11,0,0,0,0),
 )
 
 
@@ -34,10 +36,10 @@ EXPECTED_RESULT_RSS = """<?xml version="1.0" encoding="utf-8"?>
     Umlauts: äöüßÄÖÜ
     Chinese: 老师是四十四，是不是？
     Finnish: Mustan kissan paksut posket. (ah, no special chars) Kärpänen sanoi kärpäselle: tuu kattoon kattoon ku kaveri tapettiin tapettiin.
-    </description><language>en</language><lastBuildDate>%DATE%</lastBuildDate><item><title>Hello</title><link>http://www.holovaty.com/test/</link><description>Testing.</description></item></channel></rss>"""
+    </description><language>en</language><lastBuildDate>%DATE%</lastBuildDate><item><title>Hello</title><link>http://www.holovaty.com/test/</link><description>Testing.</description><pubDate>Thu, 11 Aug 2016 00:00:00 -0000</pubDate></item></channel></rss>"""
 
 EXPECTED_RESULT_ATOM = """<?xml version="1.0" encoding="utf-8"?>
-<feed xml:lang="en" xmlns="http://www.w3.org/2005/Atom"><title>Poynter E-Media Tidbits</title><link href="http://www.poynter.org/column.asp?id=31" rel="alternate"></link><id>http://www.poynter.org/column.asp?id=31</id><updated>%DATE%</updated><entry><title>Hello</title><link href="http://www.holovaty.com/test/" rel="alternate"></link><id>tag:www.holovaty.com:/test/</id><summary type="html">Testing.</summary><content type="html">Full content of our testing entry.</content></entry></feed>"""
+<feed xml:lang="en" xmlns="http://www.w3.org/2005/Atom"><title>Poynter E-Media Tidbits</title><link href="http://www.poynter.org/column.asp?id=31" rel="alternate"></link><id>http://www.poynter.org/column.asp?id=31</id><updated>%DATE%</updated><entry><title>Hello</title><link href="http://www.holovaty.com/test/" rel="alternate"></link><published>2016-08-11T00:00:00Z</published><updated>2016-08-11T00:00:00Z</updated><id>tag:www.holovaty.com,2016-08-11:/test/</id><summary type="html">Testing.</summary><content type="html">Full content of our testing entry.</content></entry></feed>"""
 
 ENCODING = 'utf-8'
 
@@ -71,7 +73,10 @@ class TestFeedGenerator(unittest.TestCase):
         for k, v in FIXT_FEED.items():
             self.assertEqual(type(v), ty)
         for k, v in FIXT_ITEM.items():
-            self.assertEqual(type(v), ty)
+            if k == "pubdate" or k == "updateddate":
+                self.assertEqual(type(v), datetime.datetime)
+            else:
+                self.assertEqual(type(v), ty)
         self.assertEqual(type(EXPECTED_RESULT_RSS), ty)
 
     def test_001_string_results_rss(self):
