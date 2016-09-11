@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/env python
 
 # Using setuptools rather than distutils to get the `develop` command
 from setuptools import setup
@@ -6,7 +6,7 @@ from setuptools import setup
 
 NAME = 'feedgenerator'
 PACKAGES = ['feedgenerator', 'feedgenerator.django',
-    'feedgenerator.django.utils']
+            'feedgenerator.django.utils']
 DESCRIPTION = 'Standalone version of django.utils.feedgenerator'
 LONG_DESCRIPTION = open('README.rst').read()
 
@@ -26,7 +26,7 @@ CLASSIFIERS = ['Development Status :: 3 - Alpha',
                'Topic :: Internet :: WWW/HTTP',
                'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
                'Topic :: Software Development :: Libraries :: Python Modules',
-]
+               ]
 
 AUTHOR = 'Django Software Foundation'
 AUTHOR_EMAIL = 'foundation@djangoproject.com'
