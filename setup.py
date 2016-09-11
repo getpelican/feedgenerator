@@ -30,8 +30,8 @@ CLASSIFIERS = ['Development Status :: 3 - Alpha',
 
 AUTHOR = 'Django Software Foundation'
 AUTHOR_EMAIL = 'foundation@djangoproject.com'
-MAINTAINER = 'Dirk Makowski'
-MAINTAINER_EMAIL = 'dm@parenchym.com'
+MAINTAINER = 'Pelican Dev Team'
+MAINTAINER_EMAIL = 'authors@getpelican.com'
 KEYWORDS = "feed atom rss".split(' ')
 VERSION = '1.8'
 
