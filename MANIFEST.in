@@ -1,3 +1,2 @@
 include README.rst LICENSE tox.ini
-global-include *.py
 recursive-include tests_feedgenerator *
