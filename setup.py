@@ -12,8 +12,9 @@ LONG_DESCRIPTION = open('README.rst').read()
 
 URL = "https://github.com/getpelican/feedgenerator"
 
-CLASSIFIERS = ['Development Status :: 3 - Alpha',
+CLASSIFIERS = ['Development Status :: 5 - Production/Stable',
                'Environment :: Web Environment',
+               'Framework :: Pelican',
                'Intended Audience :: Developers',
                'License :: OSI Approved :: BSD License',
                'Operating System :: OS Independent',
@@ -23,6 +24,8 @@ CLASSIFIERS = ['Development Status :: 3 - Alpha',
                'Programming Language :: Python :: 3.3',
                'Programming Language :: Python :: 3.4',
                'Programming Language :: Python :: 3.5',
+               'Programming Language :: Python :: 3.6',
+               'Programming Language :: Python :: 3.7',
                'Topic :: Internet :: WWW/HTTP',
                'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
                'Topic :: Software Development :: Libraries :: Python Modules',
