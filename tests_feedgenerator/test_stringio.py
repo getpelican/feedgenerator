@@ -23,19 +23,13 @@ class TestStringIO(unittest.TestCase):
         # If we throw unicode into the StringIO buffer, we'll
         # get unicode out of it.
         # Thank god this is the same in Python 2 and 3.
-        if six.PY3:
-            self.assertEqual(type(S0), str)
-        else:
-            self.assertEqual(type(S0), unicode)
+        self.assertEqual(type(S0), six.text_type)
         buf = StringIO()
         print(S0, file=buf, end="")
         s1 = buf.getvalue()
         self.assertEqual(type(S0), type(s1))
         self.assertEqual(S0, s1)
-        if six.PY3:
-            self.assertEqual(type(s1), str)
-        else:
-            self.assertEqual(type(s1), unicode)
+        self.assertEqual(type(s1), six.text_type)
 
     def test_002_bytes(self):
         buf = StringIO()

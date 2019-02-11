@@ -69,7 +69,7 @@ class TestFeedGenerator(unittest.TestCase):
         self.maxDiff = None
 
     def test_000_types(self):
-        ty = str if six.PY3 else unicode
+        ty = six.text_type
         for k, v in FIXT_FEED.items():
             self.assertEqual(type(v), ty)
         for k, v in FIXT_ITEM.items():
