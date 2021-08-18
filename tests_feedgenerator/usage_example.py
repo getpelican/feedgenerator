@@ -1,10 +1,5 @@
-# -*- encoding: utf-8 -*-
-
-from __future__ import unicode_literals
-
 import os
 import tempfile
-import six
 import feedgenerator
 
 feed = feedgenerator.Rss201rev2Feed(
@@ -23,10 +18,7 @@ feed.add_item(
     description="Testing."
 )
 
-if six.PY3:
-    FN_PREFIX = 'feed_py3-'
-else:
-    FN_PREFIX = 'feed_py2-'
+FN_PREFIX = 'feed_py3-'
 
 # Usage example in feedgenerator docs opens the file in text mode, not binary.
 # So we do this here likewise.

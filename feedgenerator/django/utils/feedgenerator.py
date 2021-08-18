@@ -21,18 +21,12 @@ Sample usage:
 For definitions of the different versions of RSS, see:
 http://web.archive.org/web/20110718035220/http://diveintomark.org/archives/2004/02/04/incompatible-rss
 """
-from __future__ import unicode_literals
-
 import datetime
-try:
-    from urllib.parse import urlparse
-except ImportError:     # Python 2
-    from urlparse import urlparse
+from urllib.parse import urlparse
 from .xmlutils import SimplerXMLGenerator
 from .encoding import force_text, iri_to_uri
 from . import datetime_safe
-from . import six
-from .six import StringIO
+from io import StringIO
 from .timezone import is_aware
 
 def rfc2822_date(date):
@@ -46,8 +40,6 @@ def rfc2822_date(date):
     dow = days[date.weekday()]
     month = months[date.month - 1]
     time_str = date.strftime('%s, %%d %s %%Y %%H:%%M:%%S ' % (dow, month))
-    if not six.PY3:             # strftime returns a byte string in Python 2
-        time_str = time_str.decode('utf-8')
     if is_aware(date):
         offset = date.tzinfo.utcoffset(date)
         timezone = (offset.days * 24 * 60) + (offset.seconds // 60)
@@ -60,8 +52,6 @@ def rfc3339_date(date):
     # Support datetime objects older than 1900
     date = datetime_safe.new_datetime(date)
     time_str = date.strftime('%Y-%m-%dT%H:%M:%S')
-    if not six.PY3:             # strftime returns a byte string in Python 2
-        time_str = time_str.decode('utf-8')
     if is_aware(date):
         offset = date.tzinfo.utcoffset(date)
         timezone = (offset.days * 24 * 60) + (offset.seconds // 60)

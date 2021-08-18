@@ -13,8 +13,6 @@ except ImportError:
     pytz = None
 
 # ### from django.conf import settings
-from . import six
-
 __all__ = [
     'utc', 'get_default_timezone', 'get_current_timezone',
     'activate', 'deactivate', 'override',
@@ -97,18 +95,18 @@ utc = pytz.utc if pytz else UTC()
 # ### # In order to avoid accessing the settings at compile time,
 # ### # wrap the expression in a function and cache the result.
 # ### _localtime = None
-# ### 
+# ###
 # ### def get_default_timezone():
 # ###     """
 # ###     Returns the default time zone as a tzinfo instance.
-# ### 
+# ###
 # ###     This is the time zone defined by settings.TIME_ZONE.
-# ### 
+# ###
 # ###     See also :func:`get_current_timezone`.
 # ###     """
 # ###     global _localtime
 # ###     if _localtime is None:
-# ###         if isinstance(settings.TIME_ZONE, six.string_types) and pytz is not None:
+# ###         if isinstance(settings.TIME_ZONE, str) and pytz is not None:
 # ###             _localtime = pytz.timezone(settings.TIME_ZONE)
 # ###         else:
 # ###             _localtime = LocalTimezone()
@@ -161,7 +159,7 @@ def activate(timezone):
     """
     if isinstance(timezone, tzinfo):
         _active.value = timezone
-    elif isinstance(timezone, six.string_types) and pytz is not None:
+    elif isinstance(timezone, (str, )) and pytz is not None:
         _active.value = pytz.timezone(timezone)
     else:
         raise ValueError("Invalid timezone: %r" % timezone)
@@ -205,14 +203,14 @@ class override(object):
 
 
 # ### # Templates
-# ### 
+# ###
 # ### def template_localtime(value, use_tz=None):
 # ###     """
 # ###     Checks if value is a datetime and converts it to local time if necessary.
-# ### 
+# ###
 # ###     If use_tz is provided and is not None, that will force the value to
 # ###     be converted (or not), overriding the value of settings.USE_TZ.
-# ### 
+# ###
 # ###     This function is designed for use by the template engine.
 # ###     """
 # ###     should_convert = (isinstance(value, datetime)

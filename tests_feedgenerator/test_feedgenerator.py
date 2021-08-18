@@ -1,13 +1,5 @@
-# -*- encoding: utf-8 -*-
+import unittest
 
-from __future__ import unicode_literals
-
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
-
-import six
 import datetime
 
 import feedgenerator
@@ -73,7 +65,7 @@ class TestFeedGenerator(unittest.TestCase):
         self.maxDiff = None
 
     def test_000_types(self):
-        ty = six.text_type
+        ty = str
         for k, v in FIXT_FEED.items():
             self.assertEqual(type(v), ty)
         for k, v in FIXT_ITEM.items():
@@ -88,21 +80,9 @@ class TestFeedGenerator(unittest.TestCase):
         feed = feedgenerator.Rss201rev2Feed(**FIXT_FEED)
         feed.add_item(**FIXT_ITEM)
         result = feed.writeString(ENCODING)
-        if six.PY3:
-            # On Python 3, result of feedgenerator is a unicode string!
-            # So do not encode our expected_result.
-            expected_result = build_expected_rss_result(feed, EXPECTED_RESULT_RSS, None)
-        else:
-            # On Python 2, result of feedgenerator is a str string!
-            # Expected_result must therefore encoded likewise.
-            expected_result = build_expected_rss_result(feed, EXPECTED_RESULT_RSS, ENCODING)
-        # The different result types of Python 2 (str=bytes) and Python 3
-        # (str=text=unicode) stems from a different implementation of StringIO.
-        # As I understand it, getvalue() in Python 2 returns the type you
-        # originally wrote into the buffer. In Python 3 getvalue() always
-        # returns a str (=text=unicode).
-        # See other test: test_stringio.py
-        #print type(result), type(expected_result)
+        # On Python 3, result of feedgenerator is a unicode string!
+        # So do not encode our expected_result.
+        expected_result = build_expected_rss_result(feed, EXPECTED_RESULT_RSS, None)
         self.assertEqual(type(result), type(expected_result))
         self.assertEqual(result, expected_result)
 
@@ -111,20 +91,8 @@ class TestFeedGenerator(unittest.TestCase):
         feed = feedgenerator.Atom1Feed(**FIXT_FEED)
         feed.add_item(**FIXT_ITEM)
         result = feed.writeString(ENCODING)
-        if six.PY3:
-            # On Python 3, result of feedgenerator is a unicode string!
-            # So do not encode our expected_result.
-            expected_result = build_expected_atom_result(feed, EXPECTED_RESULT_ATOM, None)
-        else:
-            # On Python 2, result of feedgenerator is a str string!
-            # Expected_result must therefore encoded likewise.
-            expected_result = build_expected_atom_result(feed, EXPECTED_RESULT_ATOM, ENCODING)
-        # The different result types of Python 2 (str=bytes) and Python 3
-        # (str=text=unicode) stems from a different implementation of StringIO.
-        # As I understand it, getvalue() in Python 2 returns the type you
-        # originally wrote into the buffer. In Python 3 getvalue() always
-        # returns a str (=text=unicode).
-        # See other test: test_stringio.py
-        #print type(result), type(expected_result)
+        # On Python 3, result of feedgenerator is a unicode string!
+        # So do not encode our expected_result.
+        expected_result = build_expected_atom_result(feed, EXPECTED_RESULT_ATOM, None)
         self.assertEqual(type(result), type(expected_result))
         self.assertEqual(result, expected_result)

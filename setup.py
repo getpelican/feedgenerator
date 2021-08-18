@@ -39,7 +39,7 @@ VERSION = '1.9.2'
 
 TEST_SUITE = 'tests_feedgenerator'
 
-REQUIRES = ['pytz >= 0a', 'six']
+REQUIRES = ['pytz >= 0a']
 
 setup(
     name=NAME,
@@ -47,6 +47,7 @@ setup(
     packages=PACKAGES,
     test_suite=TEST_SUITE,
     install_requires=REQUIRES,
+    python_requires='>=3.6',
     # metadata for upload to PyPI
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,

@@ -2,8 +2,6 @@
 Utilities for XML generation/parsing.
 """
 
-import six
-
 from xml.sax.saxutils import XMLGenerator, quoteattr
 
 class SimplerXMLGenerator(XMLGenerator):
@@ -20,4 +18,4 @@ class SimplerXMLGenerator(XMLGenerator):
         # sort attributes for consistent output
         for (name, value) in sorted(attrs.items()):
             self._write(' %s=%s' % (name, quoteattr(value)))
-        self._write(six.u('>'))
+        self._write(str('>'))
