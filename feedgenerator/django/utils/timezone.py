@@ -173,7 +173,7 @@ def deactivate():
     if hasattr(_active, "value"):
         del _active.value
 
-class override(object):
+class override:
     """
     Temporarily set the time zone for the current thread.
 

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from io import open
 
 # Using setuptools rather than distutils to get the `develop` command
 from setuptools import setup

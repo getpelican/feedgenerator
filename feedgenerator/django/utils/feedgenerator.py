@@ -39,7 +39,7 @@ def rfc2822_date(date):
     # We do this ourselves to be timezone aware, email.Utils is not tz aware.
     dow = days[date.weekday()]
     month = months[date.month - 1]
-    time_str = date.strftime('%s, %%d %s %%Y %%H:%%M:%%S ' % (dow, month))
+    time_str = date.strftime(f'{dow}, %d {month} %Y %H:%M:%S ')
     if is_aware(date):
         offset = date.tzinfo.utcoffset(date)
         timezone = (offset.days * 24 * 60) + (offset.seconds // 60)
@@ -73,9 +73,9 @@ def get_tag_uri(url, date):
     fragment = ''
     if bits.fragment != '':
         fragment = '/%s' % (bits.fragment)
-    return 'tag:%s%s:%s%s' % (bits.hostname, d, bits.path, fragment)
+    return f'tag:{bits.hostname}{d}:{bits.path}{fragment}'
 
-class SyndicationFeed(object):
+class SyndicationFeed:
     "Base class for all syndication feeds. Subclasses should provide write()"
     def __init__(self, title, link, description, language=None, author_email=None,
             author_name=None, author_link=None, subtitle=None, categories=None,
@@ -196,7 +196,7 @@ class SyndicationFeed(object):
         else:
             return datetime.datetime.now()
 
-class Enclosure(object):
+class Enclosure:
     "Represents an RSS enclosure"
     def __init__(self, url, length, mime_type):
         "All args are expected to be Python Unicode objects"

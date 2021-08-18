@@ -29,7 +29,7 @@ def memoize(func, cache, num_args):
         return result
     return wrapper
 
-class cached_property(object):
+class cached_property:
     """
     Decorator that creates converts a method with a single
     self argument into a property cached on the instance.
@@ -41,7 +41,7 @@ class cached_property(object):
         res = instance.__dict__[self.func.__name__] = self.func(instance)
         return res
 
-class Promise(object):
+class Promise:
     """
     This is just a base class for the proxy class created in
     the closure of the lazy function. It can be used to recognize
@@ -192,7 +192,7 @@ def new_method_proxy(func):
         return func(self._wrapped, *args)
     return inner
 
-class LazyObject(object):
+class LazyObject:
     """
     A wrapper for another class that can be used to delay instantiation of the
     wrapped class.
