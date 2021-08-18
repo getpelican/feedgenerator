@@ -17,5 +17,5 @@ class SimplerXMLGenerator(XMLGenerator):
         self._write('<' + name)
         # sort attributes for consistent output
         for (name, value) in sorted(attrs.items()):
-            self._write(' %s=%s' % (name, quoteattr(value)))
-        self._write(str('>'))
+            self._write(f' {name}={quoteattr(value)}')
+        self._write('>')
