@@ -110,7 +110,18 @@ class TestFeedGenerator(unittest.TestCase):
         )
         feed = feedgenerator.Atom1Feed(**FIXT_FEED)
         result = feed.writeString(ENCODING)
-        assert "<desciption></description>" not in result
+        assert "<subtitle></subtitle>" not in result
+
+        # case 1.b: neither should be in
+        FIXT_FEED = dict(
+            title="title",
+            link="https://example.com",
+            description="",
+            subtitle="",
+        )
+        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
+        result = feed.writeString(ENCODING)
+        assert "<subtitle></subtitle>" not in result
 
         # case 2: only description should be in
         FIXT_FEED = dict(
@@ -123,11 +134,33 @@ class TestFeedGenerator(unittest.TestCase):
         result = feed.writeString(ENCODING)
         assert "<subtitle>description</subtitle>" in result
 
+        # case 2.b: only description should be in
+        FIXT_FEED = dict(
+            title="title",
+            link="https://example.com",
+            description="description",
+            subtitle="",
+        )
+        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
+        result = feed.writeString(ENCODING)
+        assert "<subtitle>description</subtitle>" in result
+
         # case 3: only subtitle should be in
         FIXT_FEED = dict(
             title="title",
             link="https://example.com",
             description=None,
+            subtitle="subtitle",
+        )
+        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
+        result = feed.writeString(ENCODING)
+        assert "<subtitle>subtitle</subtitle>" in result
+
+        # case 3.b: only subtitle should be in
+        FIXT_FEED = dict(
+            title="title",
+            link="https://example.com",
+            description="",
             subtitle="subtitle",
         )
         feed = feedgenerator.Atom1Feed(**FIXT_FEED)
