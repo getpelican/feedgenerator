@@ -101,12 +101,16 @@ class TestFeedGenerator(unittest.TestCase):
 
 
 @pytest.mark.parametrize("description, subtitle, fragment, nonfragment", [
+    # neither are given
     (None, None, None, "<subtitle></subtitle>"),
     ("", "", None, "<subtitle></subtitle>"),
+    # description is given
     ("description", None, "<subtitle>description</subtitle>", None),
     ("description", "", "<subtitle>description</subtitle>", None),
+    # subtitle are given
     (None, "subtitle", "<subtitle>subtitle</subtitle>", None),
     ("", "subtitle", "<subtitle>subtitle</subtitle>", None),
+    # both are given, subtitle takes precedence
     ("description", "subtitle", "<subtitle>subtitle</subtitle>", "<subtitle>description</subtitle>"),
 ])
 def test_subtitle(description, subtitle, fragment, nonfragment):
