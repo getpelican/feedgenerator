@@ -96,3 +96,52 @@ class TestFeedGenerator(unittest.TestCase):
         expected_result = build_expected_atom_result(feed, EXPECTED_RESULT_ATOM, None)
         self.assertEqual(type(result), type(expected_result))
         self.assertEqual(result, expected_result)
+
+    def test_subtitle(self):
+        """Test regression for https://github.com/getpelican/feedgenerator/issues/30.
+
+        """
+        # case 1: neither should be in
+        FIXT_FEED = dict(
+            title="title",
+            link="https://example.com",
+            description=None,
+            subtitle=None,
+        )
+        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
+        result = feed.writeString(ENCODING)
+        assert "<desciption></description>" not in result
+
+        # case 2: only description should be in
+        FIXT_FEED = dict(
+            title="title",
+            link="https://example.com",
+            description="description",
+            subtitle=None,
+        )
+        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
+        result = feed.writeString(ENCODING)
+        assert "<subtitle>description</subtitle>" in result
+
+        # case 3: only subtitle should be in
+        FIXT_FEED = dict(
+            title="title",
+            link="https://example.com",
+            description=None,
+            subtitle="subtitle",
+        )
+        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
+        result = feed.writeString(ENCODING)
+        assert "<subtitle>subtitle</subtitle>" in result
+
+        # case 4: both are in, only subtitle should be in
+        FIXT_FEED = dict(
+            title="title",
+            link="https://example.com",
+            description="description",
+            subtitle="subtitle",
+        )
+        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
+        result = feed.writeString(ENCODING)
+        assert "<subtitle>subtitle</subtitle>" in result
+        assert "<subtitle>description</subtitle>" not in result
