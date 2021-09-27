@@ -325,9 +325,9 @@ class Atom1Feed(SyndicationFeed):
             handler.endElement("author")
         # try to use description or subtitle if provided, subtitle has
         # precedence above description
-        if self.feed['subtitle'] is not None:
+        if self.feed['subtitle']:
             handler.addQuickElement("subtitle", self.feed['subtitle'])
-        elif self.feed['description'] is not None:
+        elif self.feed['description']:
             handler.addQuickElement("subtitle", self.feed['description'])
         for cat in self.feed['categories']:
             handler.addQuickElement("category", "", {"term": cat})
