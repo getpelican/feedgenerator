@@ -4,6 +4,8 @@ import datetime
 
 import feedgenerator
 
+import pytest
+
 FIXT_FEED = dict(
     title="Poynter E-Media Tidbits",
     link="http://www.poynter.org/column.asp?id=31",
@@ -97,84 +99,38 @@ class TestFeedGenerator(unittest.TestCase):
         self.assertEqual(type(result), type(expected_result))
         self.assertEqual(result, expected_result)
 
-    def test_subtitle(self):
-        """Test regression for https://github.com/getpelican/feedgenerator/issues/30.
 
-        """
-        # case 1: neither should be in
-        FIXT_FEED = dict(
-            title="title",
-            link="https://example.com",
-            description=None,
-            subtitle=None,
-        )
-        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
-        result = feed.writeString(ENCODING)
-        assert "<subtitle></subtitle>" not in result
+@pytest.mark.parametrize("description, subtitle, fragment, nonfragment", [
+    (None, None, None, "<subtitle></subtitle>"),
+    ("", "", None, "<subtitle></subtitle>"),
+    ("description", None, "<subtitle>description</subtitle>", None),
+    ("description", "", "<subtitle>description</subtitle>", None),
+    (None, "subtitle", "<subtitle>subtitle</subtitle>", None),
+    ("", "subtitle", "<subtitle>subtitle</subtitle>", None),
+    ("description", "subtitle", "<subtitle>subtitle</subtitle>", "<subtitle>description</subtitle>"),
+])
+def test_subtitle(description, subtitle, fragment, nonfragment):
+    """Test regression for https://github.com/getpelican/feedgenerator/issues/30.
 
-        # case 1.b: neither should be in
-        FIXT_FEED = dict(
-            title="title",
-            link="https://example.com",
-            description="",
-            subtitle="",
-        )
-        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
-        result = feed.writeString(ENCODING)
-        assert "<subtitle></subtitle>" not in result
+    We test against all four possible combinations of description x
+    subtitle parameters and additionally for None and "".
 
-        # case 2: only description should be in
-        FIXT_FEED = dict(
-            title="title",
-            link="https://example.com",
-            description="description",
-            subtitle=None,
-        )
-        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
-        result = feed.writeString(ENCODING)
-        assert "<subtitle>description</subtitle>" in result
+    description, subtitle are the values for the respective
+    feed-parameters.
 
-        # case 2.b: only description should be in
-        FIXT_FEED = dict(
-            title="title",
-            link="https://example.com",
-            description="description",
-            subtitle="",
-        )
-        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
-        result = feed.writeString(ENCODING)
-        assert "<subtitle>description</subtitle>" in result
+    fragment and nonfragment are text fragments that should be in the
+    expected result or not.
 
-        # case 3: only subtitle should be in
-        FIXT_FEED = dict(
-            title="title",
-            link="https://example.com",
-            description=None,
-            subtitle="subtitle",
-        )
-        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
-        result = feed.writeString(ENCODING)
-        assert "<subtitle>subtitle</subtitle>" in result
-
-        # case 3.b: only subtitle should be in
-        FIXT_FEED = dict(
-            title="title",
-            link="https://example.com",
-            description="",
-            subtitle="subtitle",
-        )
-        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
-        result = feed.writeString(ENCODING)
-        assert "<subtitle>subtitle</subtitle>" in result
-
-        # case 4: both are in, only subtitle should be in
-        FIXT_FEED = dict(
-            title="title",
-            link="https://example.com",
-            description="description",
-            subtitle="subtitle",
-        )
-        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
-        result = feed.writeString(ENCODING)
-        assert "<subtitle>subtitle</subtitle>" in result
-        assert "<subtitle>description</subtitle>" not in result
+    """
+    FIXT_FEED = dict(
+        title="title",
+        link="https://example.com",
+        description=description,
+        subtitle=subtitle,
+    )
+    feed = feedgenerator.Atom1Feed(**FIXT_FEED)
+    result = feed.writeString(ENCODING)
+    if fragment:
+        assert fragment in result
+    if nonfragment:
+        assert nonfragment not in result
