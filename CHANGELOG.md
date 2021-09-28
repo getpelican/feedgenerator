@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+2.0.0 - 2021-09-28
+------------------
+
+* Add preliminary support for adding images to feeds
+* Update code for Python 3.6+
+* Drop support for Python 2.7
+* Fix double subtitles if both description & subtitle are provided
+
 1.9.2 - 2021-08-18
 ------------------
 
