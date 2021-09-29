@@ -36,7 +36,7 @@ MAINTAINER_EMAIL = 'authors@getpelican.com'
 KEYWORDS = "feed atom rss".split(' ')
 VERSION = '2.0.0'
 
-TEST_SUITE = 'tests_feedgenerator'
+TEST_SUITE = 'tests'
 
 REQUIRES = ['pytz >= 0a']
 

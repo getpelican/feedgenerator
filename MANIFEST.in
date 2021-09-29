@@ -1,2 +1,2 @@
 include README.rst LICENSE tox.ini
-recursive-include tests_feedgenerator *
+recursive-include tests *
