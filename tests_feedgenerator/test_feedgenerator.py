@@ -1,10 +1,9 @@
-import unittest
-
 import datetime
+
+import pytest
 
 import feedgenerator
 
-import pytest
 
 FIXT_FEED = dict(
     title="Poynter E-Media Tidbits",
@@ -51,6 +50,7 @@ def build_expected_rss_result(feed, expected_result, encoding):
     else:
         return s
 
+
 def build_expected_atom_result(feed, expected_result, encoding):
     # Result's date is of course different from the date in the fixture.
     # So make them equal!
@@ -61,43 +61,40 @@ def build_expected_atom_result(feed, expected_result, encoding):
     else:
         return s
 
-class TestFeedGenerator(unittest.TestCase):
 
-    def setUp(self):
-        self.maxDiff = None
+def test_000_types():
+    for k, v in FIXT_FEED.items():
+        assert isinstance(v, str)
+    for k, v in FIXT_ITEM.items():
+        if k == "pubdate" or k == "updateddate":
+            assert isinstance(v, datetime.datetime)
+        else:
+            assert isinstance(v, str)
+    assert isinstance(EXPECTED_RESULT_RSS, str)
 
-    def test_000_types(self):
-        ty = str
-        for k, v in FIXT_FEED.items():
-            self.assertEqual(type(v), ty)
-        for k, v in FIXT_ITEM.items():
-            if k == "pubdate" or k == "updateddate":
-                self.assertEqual(type(v), datetime.datetime)
-            else:
-                self.assertEqual(type(v), ty)
-        self.assertEqual(type(EXPECTED_RESULT_RSS), ty)
 
-    def test_001_string_results_rss(self):
-        #import ipdb; ipdb.set_trace()
-        feed = feedgenerator.Rss201rev2Feed(**FIXT_FEED)
-        feed.add_item(**FIXT_ITEM)
-        result = feed.writeString(ENCODING)
-        # On Python 3, result of feedgenerator is a unicode string!
-        # So do not encode our expected_result.
-        expected_result = build_expected_rss_result(feed, EXPECTED_RESULT_RSS, None)
-        self.assertEqual(type(result), type(expected_result))
-        self.assertEqual(result, expected_result)
+def test_001_string_results_rss():
+    #import ipdb; ipdb.set_trace()
+    feed = feedgenerator.Rss201rev2Feed(**FIXT_FEED)
+    feed.add_item(**FIXT_ITEM)
+    result = feed.writeString(ENCODING)
+    # On Python 3, result of feedgenerator is a unicode string!
+    # So do not encode our expected_result.
+    expected_result = build_expected_rss_result(feed, EXPECTED_RESULT_RSS, None)
+    assert isinstance(result, type(expected_result))
+    assert result == expected_result
 
-    def test_002_string_results_atom(self):
-        #import ipdb; ipdb.set_trace()
-        feed = feedgenerator.Atom1Feed(**FIXT_FEED)
-        feed.add_item(**FIXT_ITEM)
-        result = feed.writeString(ENCODING)
-        # On Python 3, result of feedgenerator is a unicode string!
-        # So do not encode our expected_result.
-        expected_result = build_expected_atom_result(feed, EXPECTED_RESULT_ATOM, None)
-        self.assertEqual(type(result), type(expected_result))
-        self.assertEqual(result, expected_result)
+
+def test_002_string_results_atom():
+    #import ipdb; ipdb.set_trace()
+    feed = feedgenerator.Atom1Feed(**FIXT_FEED)
+    feed.add_item(**FIXT_ITEM)
+    result = feed.writeString(ENCODING)
+    # On Python 3, result of feedgenerator is a unicode string!
+    # So do not encode our expected_result.
+    expected_result = build_expected_atom_result(feed, EXPECTED_RESULT_ATOM, None)
+    assert isinstance(result, type(expected_result))
+    assert result == expected_result
 
 
 @pytest.mark.parametrize("description, subtitle, fragment, nonfragment", [
