@@ -195,7 +195,7 @@ def filepath_to_uri(path):
 # given fallback encoding if the encoding is unsupported by python or could
 # not be determined.  See tickets #10335 and #5846
 try:
-    DEFAULT_LOCALE_ENCODING = locale.getdefaultlocale()[1] or 'ascii'
+    DEFAULT_LOCALE_ENCODING = locale.getlocale()[1] or 'ascii'
     codecs.lookup(DEFAULT_LOCALE_ENCODING)
 except:
     DEFAULT_LOCALE_ENCODING = 'ascii'
