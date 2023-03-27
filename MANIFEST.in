@@ -1,2 +1,3 @@
 include README.rst LICENSE tox.ini
 recursive-include tests *
+exclude tests/__pycache__/*
