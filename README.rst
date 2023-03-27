@@ -3,7 +3,7 @@ FeedGenerator
 
 |githubci| |pypi|
 
-.. |githubci| image:: https://img.shields.io/github/workflow/status/getpelican/feedgenerator/build
+.. |githubci| image:: https://img.shields.io/github/actions/workflow/status/getpelican/feedgenerator/main.yml?branch=main
     :target: https://github.com/getpelican/feedgenerator/actions
     :alt: Build Status
 
