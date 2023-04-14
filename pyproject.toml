@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "feedgenerator"
-version = "2.0.0"
+version = "2.1.0"
 description = "Standalone version of django.utils.feedgenerator"
 authors = ["Pelican Dev Team <authors@getpelican.com>"]
 readme = "README.rst"
