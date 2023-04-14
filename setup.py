@@ -35,7 +35,7 @@ AUTHOR_EMAIL = 'foundation@djangoproject.com'
 MAINTAINER = 'Pelican Dev Team'
 MAINTAINER_EMAIL = 'authors@getpelican.com'
 KEYWORDS = "feed atom rss".split(' ')
-VERSION = '2.0.0'
+VERSION = '2.1.0'
 
 TEST_SUITE = 'tests'
 
