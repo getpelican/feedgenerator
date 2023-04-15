@@ -15,4 +15,4 @@ version-strings = ["setup.py"]
 build-system = "setuptools"
 
 [build-system]
-requires = ["setuptools >= 40.6.0", "wheel"]
+requires = ["setuptools >= 40.6.0"]
