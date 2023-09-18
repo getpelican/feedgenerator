@@ -1,11 +1,60 @@
-[tool.poetry]
+[build-system]
+requires = ["setuptools>=64.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
 name = "feedgenerator"
 version = "2.1.0"
+authors = [
+    {name="Pelican Dev Team", email="authors@getpelican.com"},
+]
 description = "Standalone version of django.utils.feedgenerator"
-authors = ["Pelican Dev Team <authors@getpelican.com>"]
-readme = "README.rst"
-license = "BSD-3-Clause"
 keywords = ["feed", "atom", "rss"]
+readme = "README.rst"
+license = { file="LICENSE" }
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Environment :: Web Environment',
+    'Framework :: Pelican',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: BSD License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Topic :: Internet :: WWW/HTTP',
+    'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+]
+requires-python = ">=3.7"
+dependencies = [
+    "pytz>=0a",
+]
+
+[project.urls]
+'Source' = "https://github.com/getpelican/feedgenerator"
+
+[tool.setuptools]
+packages = [
+    "feedgenerator",
+    "feedgenerator.django",
+    "feedgenerator.django.utils",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "githubrelease",
+    "httpx==0.18.2",
+    "autopub",
+    "twine",
+    "wheel",
+]
+
 
 [tool.autopub]
 project-name = "feedgenerator"
@@ -14,5 +63,10 @@ git-email = "52496925+botpub@users.noreply.github.com"
 version-strings = ["setup.py"]
 build-system = "setuptools"
 
-[build-system]
-requires = ["setuptools >= 40.6.0"]
+[tool.pytest.ini_options]
+addopts = """
+    --cov=feedgenerator
+    --cov=tests
+    --cov-report=html
+    --cov-report=term-missing:skip-covered
+"""
