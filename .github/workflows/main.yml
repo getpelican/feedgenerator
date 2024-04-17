@@ -6,8 +6,12 @@ on:
   pull_request:
     branches:
 
+permissions:
+  contents: read
+
 jobs:
   test:
+    name: Test - Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -34,6 +38,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref=='refs/heads/main' && github.event_name!='pull_request'
 
+    permissions:
+      contents: write
+      id-token: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -46,14 +54,18 @@ jobs:
         id: check_release
         run: |
           python -m pip install autopub[github]
-          echo "release=$(autopub check)" >> $GITHUB_OUTPUT
+          autopub check
 
       - name: Publish
-        if: ${{ steps.check_release.outputs.release=='' }}
+        if: ${{ steps.check_release.outputs.autopub_release=='true' }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          TWINE_USERNAME: "__token__"
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git remote set-url origin https://$GITHUB_TOKEN@github.com/${{ github.repository }}
-          autopub deploy
+          autopub prepare
+          autopub commit
+          autopub build
+          autopub githubrelease
+
+      - name: Upload package to PyPI
+        if: ${{ steps.check_release.outputs.autopub_release=='true' }}
+        uses: pypa/gh-action-pypi-publish@release/v1
