@@ -21,7 +21,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Upgrade Pip
         run: python -m pip install -U pip
-      - name: Install package and dev-dependencies
+      - name: Install package and development dependencies
         run: python -m pip install -e .[dev]
       - name: Test with pytest
         run: |
@@ -45,7 +45,7 @@ jobs:
       - name: Check release
         id: check_release
         run: |
-          python -m pip install -e .[dev]
+          python -m pip install autopub[github]
           echo "release=$(autopub check)" >> $GITHUB_OUTPUT
 
       - name: Publish
