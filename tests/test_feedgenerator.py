@@ -1,4 +1,5 @@
 import datetime
+from zoneinfo import ZoneInfo
 
 import pytest
 
@@ -20,7 +21,7 @@ FIXT_ITEM = dict(
     link="http://www.holovaty.com/täst/",
     description="Testing.",
     content="Full content of our testing entry.",
-    pubdate=datetime.datetime(2016,8,11,0,0,0,0),
+    pubdate=datetime.datetime(2016,8,11,0,0,0,0,tzinfo=ZoneInfo("America/New_York")),
 )
 
 
@@ -29,7 +30,7 @@ EXPECTED_RESULT_RSS = """<?xml version="1.0" encoding="utf-8"?>
     Umlauts: äöüßÄÖÜ
     Chinese: 老师是四十四，是不是？
     Finnish: Mustan kissan paksut posket. (ah, no special chars) Kärpänen sanoi kärpäselle: tuu kattoon kattoon ku kaveri tapettiin tapettiin.
-    </description><language>en</language><lastBuildDate>%DATE%</lastBuildDate><item><title>Hello</title><link>http://www.holovaty.com/t%C3%A4st/</link><description>Testing.</description><pubDate>Thu, 11 Aug 2016 00:00:00 -0000</pubDate></item></channel></rss>"""
+    </description><language>en</language><lastBuildDate>%DATE%</lastBuildDate><item><title>Hello</title><link>http://www.holovaty.com/t%C3%A4st/</link><description>Testing.</description><pubDate>Thu, 11 Aug 2016 00:00:00 -0400</pubDate></item></channel></rss>"""
 
 EXPECTED_RESULT_ATOM = """<?xml version="1.0" encoding="utf-8"?>
 <feed xml:lang="en" xmlns="http://www.w3.org/2005/Atom"><title>Poynter E-Media Tidbits</title><link href="http://www.poynter.org/column.asp?id=31" rel="alternate"/><id>http://www.poynter.org/column.asp?id=31</id><updated>%DATE%</updated><subtitle>A group Weblog by the sharpest minds in online media/journalism/publishing.
