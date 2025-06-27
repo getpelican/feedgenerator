@@ -26,9 +26,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 requires-python = ">=3.8.1"
-dependencies = [
-    "pytz>=0a",
-]
+dependencies = []
 
 [project.urls]
 Homepage = "https://github.com/getpelican/feedgenerator"
