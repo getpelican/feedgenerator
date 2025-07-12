@@ -2,7 +2,10 @@ import codecs
 import datetime
 import locale
 from decimal import Decimal
-from types import NoneType
+try:
+    from types import NoneType
+except ImportError:
+    NoneType = type(None)
 from urllib.parse import quote
 
 from .functional import Promise
