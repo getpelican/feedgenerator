@@ -25,18 +25,18 @@ FIXT_ITEM = dict(
 
 
 EXPECTED_RESULT_RSS = """<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Poynter E-Media Tidbits</title><link>http://www.poynter.org/column.asp?id=31</link><description>A group Weblog by the sharpest minds in online media/journalism/publishing.
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Poynter E-Media Tidbits</title><link>http://www.poynter.org/column.asp?id=31</link><description>A group Weblog by the sharpest minds in online media/journalism/publishing.
     Umlauts: äöüßÄÖÜ
     Chinese: 老师是四十四，是不是？
     Finnish: Mustan kissan paksut posket. (ah, no special chars) Kärpänen sanoi kärpäselle: tuu kattoon kattoon ku kaveri tapettiin tapettiin.
     </description><language>en</language><lastBuildDate>%DATE%</lastBuildDate><item><title>Hello</title><link>http://www.holovaty.com/t%C3%A4st/</link><description>Testing.</description><pubDate>Thu, 11 Aug 2016 00:00:00 -0000</pubDate></item></channel></rss>"""
 
 EXPECTED_RESULT_ATOM = """<?xml version="1.0" encoding="utf-8"?>
-<feed xml:lang="en" xmlns="http://www.w3.org/2005/Atom"><title>Poynter E-Media Tidbits</title><link href="http://www.poynter.org/column.asp?id=31" rel="alternate"></link><id>http://www.poynter.org/column.asp?id=31</id><updated>%DATE%</updated><subtitle>A group Weblog by the sharpest minds in online media/journalism/publishing.
+<feed xml:lang="en" xmlns="http://www.w3.org/2005/Atom"><title>Poynter E-Media Tidbits</title><link href="http://www.poynter.org/column.asp?id=31" rel="alternate"/><id>http://www.poynter.org/column.asp?id=31</id><updated>%DATE%</updated><subtitle>A group Weblog by the sharpest minds in online media/journalism/publishing.
     Umlauts: äöüßÄÖÜ
     Chinese: 老师是四十四，是不是？
     Finnish: Mustan kissan paksut posket. (ah, no special chars) Kärpänen sanoi kärpäselle: tuu kattoon kattoon ku kaveri tapettiin tapettiin.
-    </subtitle><entry><title>Hello</title><link href="http://www.holovaty.com/t%C3%A4st/" rel="alternate"></link><published>2016-08-11T00:00:00Z</published><updated>2016-08-11T00:00:00Z</updated><id>tag:www.holovaty.com,2016-08-11:/t%C3%A4st/</id><summary type="html">Testing.</summary><content type="html">Full content of our testing entry.</content></entry></feed>"""
+    </subtitle><entry><title>Hello</title><link href="http://www.holovaty.com/t%C3%A4st/" rel="alternate"/><published>2016-08-11T00:00:00Z</published><updated>2016-08-11T00:00:00Z</updated><id>tag:www.holovaty.com,2016-08-11:/t%C3%A4st/</id><summary type="html">Testing.</summary><content type="html">Full content of our testing entry.</content></entry></feed>"""
 
 ENCODING = 'utf-8'
 
@@ -99,8 +99,8 @@ def test_002_string_results_atom():
 
 @pytest.mark.parametrize("description, subtitle, fragment, nonfragment", [
     # Neither description nor subtitle are provided
-    (None, None, None, "<subtitle></subtitle>"),
-    ("", "", None, "<subtitle></subtitle>"),
+    (None, None, None, "<subtitle/>"),
+    ("", "", None, "<subtitle/>"),
     # Description is provided
     ("description", None, "<subtitle>description</subtitle>", None),
     ("description", "", "<subtitle>description</subtitle>", None),
