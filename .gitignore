@@ -29,3 +29,6 @@ htmlcov/
 
 #VIM
 .*.swp
+
+# Lock files
+*.lock
