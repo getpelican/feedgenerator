@@ -26,7 +26,9 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 requires-python = "~=3.9"
-dependencies = []
+dependencies = [
+    "tzdata; sys_platform == 'win32'",
+]
 
 [project.urls]
 Homepage = "https://github.com/getpelican/feedgenerator"
