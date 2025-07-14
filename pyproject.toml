@@ -1,6 +1,6 @@
 [project]
 name = "feedgenerator"
-version = "2.1.0"
+version = "2.2.0"
 authors = [
     {name="Pelican Dev Team", email="authors@getpelican.com"},
 ]

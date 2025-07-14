@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+2.2.0 - 2025-07-14
+------------------
+
+- Update to latest upstream code from Django 5.2
+- Remove `pytz` as a dependency on non-Windows systems
+- Use standardized `pyproject` file
+- Drop support for EOL Python 3.7 & 3.8
+
 2.1.0 - 2023-04-14
 ------------------
 
