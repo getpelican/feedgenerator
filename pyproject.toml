@@ -6,7 +6,7 @@ authors = [
 ]
 description = "Standalone version of django.utils.feedgenerator"
 keywords = ["feed", "atom", "rss"]
-readme = "README.rst"
+readme = "README.md"
 license = { file="LICENSE" }
 classifiers = [
     "Development Status :: 5 - Production/Stable",
