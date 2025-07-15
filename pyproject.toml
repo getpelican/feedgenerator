@@ -31,14 +31,16 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/getpelican/feedgenerator"
+"Homepage" = "https://github.com/getpelican/feedgenerator"
 "Issue Tracker" = "https://github.com/getpelican/feedgenerator/issues"
-Funding = "https://donate.getpelican.com/"
+"Changelog" = "https://github.com/getpelican/feedgenerator/blob/main/CHANGELOG.md"
+"Funding" = "https://donate.getpelican.com/"
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "pytest",
     "pytest-cov",
+    "pytest-sugar",
 ]
 
 [tool.autopub]
