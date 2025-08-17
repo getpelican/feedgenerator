@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+2.2.1 - 2025-08-17
+------------------
+
+Restore missing `content` property to default item dictionary.
+
 2.2.0 - 2025-07-14
 ------------------
 
