@@ -1,4 +1,5 @@
 import datetime
+from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -26,6 +27,9 @@ FIXT_ITEM = dict(
     content="Full content of our testing entry.",
     pubdate=NAIVE_DATE,
 )
+
+MINIMAL_FEED = {key: FIXT_FEED[key] for key in ("title", "link", "description")}
+MINIMAL_ITEM = {key: FIXT_ITEM[key] for key in ("title", "link", "description")}
 
 
 EXPECTED_RESULT_RSS = """<?xml version="1.0" encoding="utf-8"?>
@@ -162,3 +166,69 @@ def test_timezone_handling(generator, date, expected_date_string):
     result = feed.writeString(ENCODING)
 
     assert expected_date_string in result
+
+
+def test_feed_default_properties():
+    feed = feedgenerator.SyndicationFeed(**MINIMAL_FEED)
+
+    for key in ("title", "link", "description"):
+        assert feed.feed[key] == MINIMAL_FEED[key]
+
+    for key in (
+            "language",
+            "author_email",
+            "author_name",
+            "author_link",
+            "subtitle",
+            "categories",
+            "feed_url",
+            "feed_copyright",
+            "id",
+            "ttl",
+            "stylesheets",
+    ):
+        assert key in feed.feed
+
+    # Testing this after testing that the property exists
+    assert feed.feed["id"] == MINIMAL_FEED["link"]
+
+
+def test_item_default_properties():
+    feed = feedgenerator.SyndicationFeed(**MINIMAL_FEED)
+    feed.add_item(**MINIMAL_ITEM)
+
+    for key in ("title", "description"):
+        expected_value = MINIMAL_ITEM[key]
+        # The link in the test contains a multibyte character
+        if key == "link":
+            expected_value = quote(MINIMAL_ITEM[key], safe="/#%[]=:;$&()+,!?*@'~")
+        assert feed.items[0][key] == expected_value
+
+    for key in (
+            "content",
+            "author_email",
+            "author_name",
+            "author_link",
+            "pubdate",
+            "updateddate",
+            "comments",
+            "unique_id",
+            "unique_id_is_permalink",
+            "enclosures",
+            "categories",
+            "item_copyright",
+            "ttl",
+    ):
+        assert key in feed.items[0]
+
+
+def test_feed_kwargs():
+    feed = feedgenerator.SyndicationFeed(test="test", **FIXT_FEED)
+    assert "test" in feed.feed
+
+
+def test_item_kwargs():
+    feed = feedgenerator.SyndicationFeed(**FIXT_ITEM)
+    feed.add_item(test="test", **FIXT_ITEM)
+
+    assert "test" in feed.items[0]
