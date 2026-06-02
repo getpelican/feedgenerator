@@ -232,3 +232,31 @@ def test_item_kwargs():
     feed.add_item(test="test", **FIXT_ITEM)
 
     assert "test" in feed.items[0]
+
+
+def test_get_tag_uri_encodes_non_ascii_path():
+    # A tag URI is a URI and must be ASCII (RFC 4151). A raw IRI passed in by a
+    # caller must be percent-encoded.
+    uri = feedgenerator.get_tag_uri(
+        "https://www.gimp.org/news/2026/02/22/øyvind-kolås-interview-ww2017/",
+        NAIVE_DATE,
+    )
+    assert uri == (
+        "tag:www.gimp.org,2016-08-11:"
+        "/news/2026/02/22/%C3%B8yvind-kol%C3%A5s-interview-ww2017/"
+    )
+
+
+def test_get_tag_uri_is_idempotent_on_encoded_path():
+    # Callers that already pass an already encoded URL must be unaffected.
+    already_encoded = "http://www.holovaty.com/t%C3%A4st/"
+    assert feedgenerator.get_tag_uri(already_encoded, NAIVE_DATE) == (
+        "tag:www.holovaty.com,2016-08-11:/t%C3%A4st/"
+    )
+
+
+def test_get_tag_uri_encodes_non_ascii_fragment():
+    uri = feedgenerator.get_tag_uri(
+        "https://example.com/path#täst", NAIVE_DATE
+    )
+    assert uri == "tag:example.com,2016-08-11:/path/t%C3%A4st"

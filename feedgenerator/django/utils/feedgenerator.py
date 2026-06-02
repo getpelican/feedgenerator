@@ -58,8 +58,8 @@ def get_tag_uri(url, date):
     # This is a backwards-compatibility not in Django
     fragment = ""
     if bits.fragment != "":
-        fragment = f"/{bits.fragment}"
-    return f"tag:{bits.hostname}{d}:{bits.path}{fragment}"
+        fragment = f"/{iri_to_uri(bits.fragment)}"
+    return f"tag:{bits.hostname}{d}:{iri_to_uri(bits.path)}{fragment}"
 
 def _guess_stylesheet_mimetype(url):
     """
