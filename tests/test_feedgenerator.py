@@ -232,3 +232,31 @@ def test_item_kwargs():
     feed.add_item(test="test", **FIXT_ITEM)
 
     assert "test" in feed.items[0]
+
+
+@pytest.mark.parametrize("local_offset", [-5, 0, 8])
+def test_atom_undated_entry_uses_current_utc(monkeypatch, local_offset):
+    """An undated entry must not label local wall-clock time as UTC."""
+    from xml.etree import ElementTree
+
+    class FixedDateTime(datetime.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            instant = cls(2026, 10, 1, 12, 34, 56, tzinfo=datetime.timezone.utc)
+            if tz is not None:
+                return instant.astimezone(tz)
+            local_tz = datetime.timezone(datetime.timedelta(hours=local_offset))
+            return instant.astimezone(local_tz).replace(tzinfo=None)
+
+    monkeypatch.setattr(
+        "feedgenerator.django.utils.feedgenerator.datetime.datetime", FixedDateTime
+    )
+    feed = feedgenerator.Atom1Feed(**MINIMAL_FEED)
+    feed.add_item(**MINIMAL_ITEM)
+    root = ElementTree.fromstring(feed.writeString(ENCODING))
+    namespace = {"atom": "http://www.w3.org/2005/Atom"}
+    entry_updated = root.find("atom:entry/atom:updated", namespace).text
+    feed_updated = root.find("atom:updated", namespace).text
+    expected = FixedDateTime.now(datetime.timezone.utc)
+    assert datetime.datetime.fromisoformat(entry_updated) == expected
+    assert datetime.datetime.fromisoformat(feed_updated) == expected

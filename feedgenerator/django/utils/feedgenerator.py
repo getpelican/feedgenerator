@@ -477,7 +477,7 @@ class Atom1Feed(SyndicationFeed):
         handler.addQuickElement("link", "", {"href": item["link"], "rel": "alternate"})
 
         # This is a backwards-compatibility not in Django
-        updated_date = datetime.datetime.now()
+        updated_date = datetime.datetime.now(tz=datetime.timezone.utc)
 
         if item["pubdate"] is not None:
             handler.addQuickElement("published", rfc3339_date(item["pubdate"]))
