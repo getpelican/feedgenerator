@@ -187,6 +187,8 @@ class SyndicationFeed:
         Add an item to the feed. All args are expected to be strings except
         pubdate and updateddate, which are datetime.datetime objects, and
         enclosures, which is an iterable of instances of the Enclosure class.
+        Enclosures are consumed when the item is added so it can be written
+        more than once.
         """
 
         def to_str(s):
@@ -207,7 +209,7 @@ class SyndicationFeed:
                 "comments": to_str(comments),
                 "unique_id": to_str(unique_id),
                 "unique_id_is_permalink": unique_id_is_permalink,
-                "enclosures": enclosures or (),
+                "enclosures": list(enclosures or ()),
                 "categories": categories or (),
                 "item_copyright": to_str(item_copyright),
                 "ttl": to_str(ttl),
@@ -371,7 +373,7 @@ class Rss201rev2Feed(RssFeed):
         # Author information.
         if item["author_name"] and item["author_email"]:
             handler.addQuickElement(
-                "author", "%s (%s)" % (item["author_email"], item["author_name"])
+                "author", "{} ({})".format(item["author_email"], item["author_name"])
             )
         elif item["author_email"]:
             handler.addQuickElement("author", item["author_email"])

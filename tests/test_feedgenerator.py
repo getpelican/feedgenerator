@@ -1,5 +1,6 @@
 import datetime
 from urllib.parse import quote
+from xml.etree import ElementTree
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -232,3 +233,43 @@ def test_item_kwargs():
     feed.add_item(test="test", **FIXT_ITEM)
 
     assert "test" in feed.items[0]
+
+
+@pytest.mark.parametrize("generator, count", [
+    (feedgenerator.Rss201rev2Feed, 0),
+    (feedgenerator.Rss201rev2Feed, 1),
+    (feedgenerator.Atom1Feed, 0),
+    (feedgenerator.Atom1Feed, 1),
+    (feedgenerator.Atom1Feed, 2),
+])
+def test_enclosure_iterators_survive_repeated_writes(generator, count):
+    enclosures = [
+        feedgenerator.Enclosure(
+            f"https://example.com/audio-{index}.mp3", str(index + 1), "audio/mpeg"
+        )
+        for index in range(count)
+    ]
+    feed = generator(**MINIMAL_FEED)
+    feed.add_item(**MINIMAL_ITEM, pubdate=AWARE_DATE, enclosures=iter(enclosures))
+
+    for _ in range(2):
+        root = ElementTree.fromstring(feed.writeString(ENCODING))
+        if generator is feedgenerator.Atom1Feed:
+            links = root.findall(
+                "{http://www.w3.org/2005/Atom}entry/"
+                "{http://www.w3.org/2005/Atom}link[@rel='enclosure']"
+            )
+            actual = [(link.get("href"), link.get("length"), link.get("type")) for link in links]
+        else:
+            links = root.findall("channel/item/enclosure")
+            actual = [(link.get("url"), link.get("length"), link.get("type")) for link in links]
+        assert actual == [(item.url, item.length, item.mime_type) for item in enclosures]
+
+
+def test_rss_rejects_multiple_enclosures_from_an_iterator():
+    enclosure = feedgenerator.Enclosure("https://example.com/audio.mp3", "1", "audio/mpeg")
+    feed = feedgenerator.Rss201rev2Feed(**MINIMAL_FEED)
+    feed.add_item(**MINIMAL_ITEM, enclosures=iter([enclosure, enclosure]))
+
+    with pytest.raises(ValueError, match="may only have one enclosure"):
+        feed.writeString(ENCODING)
