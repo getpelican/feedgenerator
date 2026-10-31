@@ -5,6 +5,7 @@ from zoneinfo import ZoneInfo
 import pytest
 
 import feedgenerator
+from feedgenerator.django.utils.xmlutils import UnserializableContentError
 
 AWARE_DATE = datetime.datetime(2016,8,11,0,0,0,0,tzinfo=ZoneInfo("America/New_York"))
 AWARE_DATE_UTC = datetime.datetime(2016,8,11,0,0,0,0,tzinfo=ZoneInfo("UTC"))
@@ -103,6 +104,21 @@ def test_002_string_results_atom():
     expected_result = build_expected_atom_result(feed, EXPECTED_RESULT_ATOM, None)
     assert isinstance(result, type(expected_result))
     assert result == expected_result
+
+
+def test_atom_feed_rejects_invalid_xml_character_in_content():
+    """Invalid XML characters in Atom item content must be rejected"""
+    feed = feedgenerator.Atom1Feed(**FIXT_FEED)
+    item = FIXT_ITEM | {
+        "content": "Article content before\x0bafter"
+    }
+    feed.add_item(**item)
+
+    with pytest.raises(
+        UnserializableContentError,
+        match=r"U\+000B",
+    ):
+        feed.writeString(ENCODING)
 
 
 @pytest.mark.parametrize("description, subtitle, fragment, nonfragment", [

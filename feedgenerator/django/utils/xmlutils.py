@@ -5,6 +5,10 @@ Utilities for XML generation/parsing.
 import re
 from xml.sax.saxutils import XMLGenerator
 
+INVALID_XML_CHARS = re.compile(
+    r"[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\U00010000-\U0010FFFF]"
+)
+
 
 class UnserializableContentError(ValueError):
     pass
@@ -12,7 +16,7 @@ class UnserializableContentError(ValueError):
 
 class SimplerXMLGenerator(XMLGenerator):
     def addQuickElement(self, name, contents=None, attrs=None):
-        "Convenience method for adding an element with no children"
+        """Convenience method for adding an element with no children"""
         if attrs is None:
             attrs = {}
         self.startElement(name, attrs)
@@ -21,11 +25,21 @@ class SimplerXMLGenerator(XMLGenerator):
         self.endElement(name)
 
     def characters(self, content):
-        if content and re.search(r"[\x00-\x08\x0B-\x0C\x0E-\x1F]", content):
-            # Fail loudly when content has control chars (unsupported in XML 1.0)
-            # See https://www.w3.org/International/questions/qa-controls
+        """Generate XML content
+
+        :raises: UnserializableContentErrorand:
+            If characters forbidden by XML 1.0 are detected.
+        .. seealso:: https://www.w3.org/TR/xml/#charsets
+        """
+        match = INVALID_XML_CHARS.search(content) if content else None
+        if match:
+            pos = match.start()
+            char = content[pos]
+            context = content[max(0, pos - 30) : pos + 30]
+
             raise UnserializableContentError(
-                "Control characters are not supported in XML 1.0"
+                f"Character U+{ord(char):04X} at position {pos} "
+                f"is not supported in XML 1.0. Context: {context!r}"
             )
         XMLGenerator.characters(self, content)
 
